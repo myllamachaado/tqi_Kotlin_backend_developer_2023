@@ -1,0 +1,2 @@
+INSERT INTO produto(nome_produto, preco_unitario, unidade_id, categoria_id) VALUES('Coca-Cola', 2.30, 1, 4);
+INSERT INTO produto(nome_produto, preco_unitario, unidade_id, categoria_id) VALUES('Pão Francês', 2.50, 3, 2);
