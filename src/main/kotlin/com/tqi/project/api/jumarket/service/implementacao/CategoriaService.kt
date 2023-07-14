@@ -1,7 +1,7 @@
 package com.tqi.project.api.jumarket.service.implementacao
 
 import com.tqi.project.api.jumarket.entity.Categoria
-import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontrada
+import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontradaException
 import com.tqi.project.api.jumarket.repository.CategoriaRepository
 import com.tqi.project.api.jumarket.service.ICategoria
 import org.springframework.stereotype.Service
@@ -21,7 +21,7 @@ class CategoriaService(private val categoriaRepository: CategoriaRepository) : I
 
     override fun findCategoria(categoriaId: Long): Categoria {
         return this.categoriaRepository.findById(categoriaId)
-            .orElseThrow{throw EntidadeNaoEncontrada("A categoria não existe.") }
+            .orElseThrow{throw EntidadeNaoEncontradaException("A categoria não existe.") }
 
     }
 

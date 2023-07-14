@@ -1,7 +1,7 @@
 package com.tqi.project.api.jumarket.service.implementacao
 
 import com.tqi.project.api.jumarket.entity.Unidade
-import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontrada
+import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontradaException
 import com.tqi.project.api.jumarket.repository.UnidadeRepository
 import com.tqi.project.api.jumarket.service.IUnidade
 import org.springframework.stereotype.Service
@@ -21,7 +21,7 @@ class UnidadeService (private val unidadeRepository: UnidadeRepository) : IUnida
 
     override fun findUnidade(unidadeId: Long): Unidade {
         return this.unidadeRepository.findById(unidadeId)
-            .orElseThrow{throw EntidadeNaoEncontrada("A unidade não existe.") }
+            .orElseThrow{throw EntidadeNaoEncontradaException("A unidade não existe.") }
     }
 
     @Transactional

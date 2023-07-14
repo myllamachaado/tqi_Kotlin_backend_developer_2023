@@ -1,7 +1,7 @@
 package com.tqi.project.api.jumarket.controller
 
-import com.tqi.project.api.jumarket.DTO.request.UnidadeDTO
-import com.tqi.project.api.jumarket.DTO.response.UnidadeView
+import com.tqi.project.api.jumarket.dto.request.UnidadeDTO
+import com.tqi.project.api.jumarket.dto.response.UnidadeView
 import com.tqi.project.api.jumarket.entity.Unidade
 import com.tqi.project.api.jumarket.service.implementacao.UnidadeService
 import org.springframework.http.HttpStatus

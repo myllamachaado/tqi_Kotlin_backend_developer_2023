@@ -1,14 +1,16 @@
 package com.tqi.project.api.jumarket.service.implementacao
 
 import com.tqi.project.api.jumarket.entity.Produto
-import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontrada
+import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontradaException
 import com.tqi.project.api.jumarket.repository.ProdutoRepository
 import com.tqi.project.api.jumarket.service.IProduto
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
 class ProdutoService(private val produtoRepository: ProdutoRepository) : IProduto {
 
+    @Transactional
     override fun saveProduto(produto: Produto): Produto {
         return this.produtoRepository.save(produto)
     }
@@ -19,13 +21,17 @@ class ProdutoService(private val produtoRepository: ProdutoRepository) : IProdut
 
     override fun findProduto(produtoId: Long): Produto {
         return this.produtoRepository.findById(produtoId)
-            .orElseThrow{throw EntidadeNaoEncontrada("O produto não existe.") }
+            .orElseThrow{ throw EntidadeNaoEncontradaException("O produto não existe.") }
     }
 
+    @Transactional
     override fun updateProduto(produto: Produto, produtoId: Long): Produto {
-        TODO("Not yet implemented")
+        this.findProduto(produtoId)
+        return this.saveProduto(Produto(produtoId, produto.nomeProduto, produto.precoUnitario,
+                                            produto.unidade, produto.categoria))
     }
 
+    @Transactional
     override fun deleteProduto(produtoId: Long) {
         this.findProduto(produtoId)
         this.produtoRepository.deleteById(produtoId)

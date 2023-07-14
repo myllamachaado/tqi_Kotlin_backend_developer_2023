@@ -1,7 +1,7 @@
 package com.tqi.project.api.jumarket.controller
 
-import com.tqi.project.api.jumarket.DTO.request.CategoriaDTO
-import com.tqi.project.api.jumarket.DTO.response.CategoriaView
+import com.tqi.project.api.jumarket.dto.request.CategoriaDTO
+import com.tqi.project.api.jumarket.dto.response.CategoriaView
 import com.tqi.project.api.jumarket.entity.Categoria
 import com.tqi.project.api.jumarket.service.implementacao.CategoriaService
 import org.springframework.http.HttpStatus

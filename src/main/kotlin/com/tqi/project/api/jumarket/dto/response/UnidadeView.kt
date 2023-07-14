@@ -1,10 +1,10 @@
-package com.tqi.project.api.jumarket.DTO.response
+package com.tqi.project.api.jumarket.dto.response
 
 import com.tqi.project.api.jumarket.entity.Unidade
 
 data class UnidadeView(
-    var idUnidade: Long?,
-    val nomeUnidade: String
+    private var idUnidade: Long?,
+    private val nomeUnidade: String
 ) {
     constructor(unidade: Unidade): this (
         idUnidade = unidade.id,

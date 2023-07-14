@@ -1,4 +1,4 @@
-package com.tqi.project.api.jumarket.DTO.request
+package com.tqi.project.api.jumarket.dto.request
 
 import com.tqi.project.api.jumarket.entity.Categoria
 import javax.validation.constraints.NotEmpty

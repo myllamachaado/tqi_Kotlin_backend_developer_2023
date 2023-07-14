@@ -1,7 +1,7 @@
 package com.tqi.project.api.jumarket.controller
 
-import com.tqi.project.api.jumarket.DTO.request.ProdutoDTO
-import com.tqi.project.api.jumarket.DTO.response.ProdutoView
+import com.tqi.project.api.jumarket.dto.request.ProdutoDTO
+import com.tqi.project.api.jumarket.dto.response.ProdutoView
 import com.tqi.project.api.jumarket.entity.Produto
 import com.tqi.project.api.jumarket.service.implementacao.ProdutoService
 import org.springframework.http.HttpStatus
@@ -30,14 +30,21 @@ class ProdutoController(private val produtoService: ProdutoService) {
     }
 
     @GetMapping("/{produtoId}")
-    fun findCategoria(@PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
+    fun findProduto(@PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
         val produto: Produto = this.produtoService.findProduto(produtoId)
+        return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto))
+    }
+
+    @PostMapping("/{produtoId}")
+    fun updateProduto(@RequestBody @Valid produtoDTO: ProdutoDTO,
+                      @PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
+        val produto: Produto = this.produtoService.updateProduto(produtoDTO.toEntity(), produtoId)
         return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto))
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{produtoId}")
-    fun deleteCategoria(@PathVariable produtoId: Long) {
+    fun deleteProduto(@PathVariable produtoId: Long) {
         this.produtoService.deleteProduto(produtoId)
     }
 
