@@ -46,8 +46,12 @@ Uma mercearia do Bairro Bom Descanso chamado JuMarket necessita de uma solução
 
 ## Modelo do banco de dados
 
-
-
+<figure>
+<p align="center">
+  <img src="https://github.com/myllamachaado/tqi_Kotlin_backend_developer_2023/blob/master/files/bd.PNG"/><br>
+</p>
+</figure>
+    
 ## - Executando o projeto localmente
 
 1)  Faça um clone do repositório:
@@ -66,8 +70,6 @@ spring.flyway.password=<sua senha>
 ```
 4)  Execute o projeto:
 `mvn spring-boot::run` 
-
-
 
 
 ## - Executando o projeto via Docker
