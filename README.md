@@ -1,4 +1,4 @@
-# Projeto de uma API Rest para um supermercado - Desafio TQI
+# TQI JuMarket - Projeto de uma API Rest para um supermercado
 
 <p align="center">
     <a alt="Kotlin">
