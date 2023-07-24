@@ -1,11 +1,13 @@
 package com.tqi.project.api.jumarket.dto.response
 
 import com.tqi.project.api.jumarket.entity.Carrinho
-import com.tqi.project.api.jumarket.entity.ItemCompra
+import com.tqi.project.api.jumarket.entity.Produto
+import java.math.BigDecimal
 
 data class CarrinhoView (
-    val id : Long,
-    val itemCompra : ItemCompra?
+        val produto: Produto,
+        val quantidade: Int,
+        var valorTotal: BigDecimal = produto.precoUnitario.times(BigDecimal(quantidade))
 ) {
-    constructor(carrinho: Carrinho): this (carrinho.id, carrinho.itemCompra)
+    constructor(carrinho : Carrinho) : this(carrinho.produto, carrinho.quantidade)
 }

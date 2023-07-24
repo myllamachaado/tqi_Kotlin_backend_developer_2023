@@ -1,0 +1,16 @@
+INSERT INTO categoria(nome_categoria)
+VALUES('Pães'),
+('Mercearia'),
+('Refrigerante'),
+('Massa'),
+('Enlatado'),
+('Carne'),
+('Produtos de Limpeza'),
+('Bebidas Alcoolicas'),
+('Bombonier'),
+('Salgadinho'),
+('Chá'),
+('Café'),
+('Grão'),
+('Cereal'),
+('Biscoito');

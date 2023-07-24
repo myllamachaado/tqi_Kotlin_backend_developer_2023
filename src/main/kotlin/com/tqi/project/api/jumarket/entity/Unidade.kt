@@ -1,5 +1,6 @@
 package com.tqi.project.api.jumarket.entity
 
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -7,6 +8,4 @@ import javax.persistence.*
 data class Unidade(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = 0,
     @Column(name = "nome_unidade", nullable = false) val nomeUnidade: String = ""
-) {
-    constructor(unidade: Unidade) : this (unidade.id, unidade.nomeUnidade)
-}
+) : Serializable

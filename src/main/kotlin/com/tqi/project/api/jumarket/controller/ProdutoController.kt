@@ -24,7 +24,7 @@ class ProdutoController(private val produtoService: ProdutoService) {
     @GetMapping
     fun findAllProdutos(): ResponseEntity<List<ProdutoView>> {
         val produtoList: List<ProdutoView> = this.produtoService.findAllProdutos()
-            .stream().map { produto: Produto -> ProdutoView(produto) }
+            .stream().map { produto: Produto -> ProdutoView(produto, produto.unidade, produto.categoria) }
             .collect(Collectors.toList())
         return ResponseEntity.status(HttpStatus.OK).body(produtoList)
     }
@@ -32,14 +32,14 @@ class ProdutoController(private val produtoService: ProdutoService) {
     @GetMapping("/{produtoId}")
     fun findProduto(@PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
         val produto: Produto = this.produtoService.findProduto(produtoId)
-        return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto))
+        return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto, produto.unidade, produto.categoria))
     }
 
     @PostMapping("/{produtoId}")
     fun updateProduto(@RequestBody @Valid produtoDTO: ProdutoDTO,
                       @PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
         val produto: Produto = this.produtoService.updateProduto(produtoDTO.toEntity(), produtoId)
-        return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto))
+        return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto, produto.unidade, produto.categoria))
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -1,70 +1,87 @@
 package com.tqi.project.api.jumarket.service.implementacao
 
-import com.tqi.project.api.jumarket.entity.Carrinho
-import com.tqi.project.api.jumarket.entity.ItemCompra
+import com.tqi.project.api.jumarket.dto.response.VendaView
+import com.tqi.project.api.jumarket.entity.*
+import com.tqi.project.api.jumarket.enums.Pagamento
 import com.tqi.project.api.jumarket.exception.exceptions.EntidadeNaoEncontradaException
 import com.tqi.project.api.jumarket.repository.CarrinhoRepository
 import com.tqi.project.api.jumarket.service.ICarrinho
 import org.springframework.stereotype.Service
-import java.util.*
-
+import java.math.BigDecimal
+import javax.transaction.Transactional
 
 @Service
 class CarrinhoService(private val carrinhoRepository: CarrinhoRepository,
-                      private val produtoService: ProdutoService) : ICarrinho {
+                      private val produtoService: ProdutoService,
+                      private val vendaService: VendaService,
+                      private val vendaCarrinhoService: VendaCarrinhoService) : ICarrinho {
 
-    /**
-     * Adiciona um novo item no carrinho caso ele não esteja na lista.
-     * Atualiza um item já adicionado anteriormente
-     * @return Lista de itens do carrinho atualizada após as mudanças.
-     */
-     override fun adicionarCarrinho(produtoId : Long, quantidade: Int): List<Carrinho> {
 
-         val produto = this.produtoService.findProduto(produtoId)
-         val itemEstaNoCarrinho = this.findByItemCompraProdutoId(produto.id)
+    @Transactional
+    override fun adicionarItemCarrinho(produtoId: Long, quantidade : Int) : List<Carrinho> {
+        val produto = this.produtoService.findProduto(produtoId)
 
-         val item = if(itemEstaNoCarrinho == null) {
-             Carrinho(itemCompra=ItemCompra(produto, quantidade, produto.precoUnitario*quantidade))
-         }
-         else{
-             val updateQtd = itemEstaNoCarrinho.itemCompra!!.quantidade
-             val updateTotal = produto.precoUnitario * updateQtd
-             Carrinho(itemEstaNoCarrinho.id, ItemCompra(produto, updateQtd, updateTotal))
-         }
-
-         this.carrinhoRepository.save(item)
-         return this.listaItensCarrinho()
-    }
-
-    /**
-     * Remove um item do carrinho caso ele esteja no carrinho
-     * Mostra uma mensagem de erro caso o usuário tente excluir um item que não está no carrinho
-     * @return Lista de itens do carrinho atualizada após as mudanças.
-     */
-    override fun removerCarrinho(produtoId: Long): List<Carrinho> {
-        val itemEstaNoCarrinho = this.findByItemCompraProdutoId(produtoId)
-        if(itemEstaNoCarrinho == null){
-            throw EntidadeNaoEncontradaException("O produto não está no carrinho portanto não pode ser removido.")
+        val item = if(!this.carrinhoRepository.existsByProdutoId(produtoId)){
+            Carrinho(quantidade=quantidade, produto=produto)
         }
-        this.carrinhoRepository.deleteById(itemEstaNoCarrinho.id)
-        return this.listaItensCarrinho()
+        else {
+            val carrinho = this.carrinhoRepository.findByProdutoId(produtoId).get()
+            val quantidadeAtualizada = carrinho.quantidade + quantidade
+            Carrinho(quantidade=quantidadeAtualizada, produto=produto)
+        }
+
+        this.carrinhoRepository.save(item)
+        return this.carrinhoList()
     }
 
-    /**
-     * Valida se o item está no carrinho.
-     * Em [adicionarCarrinho] serve para verificar se é uma adição ou atualização de item
-     * Em [removerCarrinho] valida se o item está na lista antes de remover
-     * @return O [ItemCompra] caso o produto esteja na lista e [null] caso contrário
-     */
-    fun findByItemCompraProdutoId(produtoId: Long) : Carrinho? {
-        return this.carrinhoRepository.findByItemCompraProdutoId(produtoId)
+    @Transactional
+    override fun removerItemCarrinho(produtoId: Long) : List<Carrinho> {
+        val produto = this.produtoService.findProduto(produtoId)
+
+        if(!this.carrinhoRepository.existsByProdutoId(produtoId)){
+            throw EntidadeNaoEncontradaException("O produto não pode ser removido pois não está no carrinho.")
+        }
+
+        this.carrinhoRepository.deleteByProdutoId(produto.id)
+        return this.carrinhoList()
     }
 
-    /**
-     * @return Lista de itens do carrinho
-     */
-    override fun listaItensCarrinho(): List<Carrinho> {
+    @Transactional
+    override fun finalizaCompra(pagamento: Pagamento) : VendaView {
+        val carrinho = this.carrinhoList()
+
+        if(carrinho.isEmpty()){
+            throw EntidadeNaoEncontradaException("O carrinho está vazio! Adicione algo para finalizar a compra.")
+        }
+
+        val valorTotalCarrinho = somaValorCarrinho(carrinho)
+
+        // Salva tabela vendas
+        val venda : Venda = this.vendaService.saveVenda(valorTotalCarrinho, pagamento.ordinal.toString())
+
+        // Salva relacionamento Venda_Carrinho
+        val vendaCarrinho = this.vendaService.formataRelacionamentoVendaCarrinho(venda, carrinho)
+        this.vendaCarrinhoService.saveVendaCarrinho(vendaCarrinho)
+
+        // Formata response para o usuário
+        val produtosFormatados = this.vendaCarrinhoService.formataItensVenda(vendaCarrinho)
+        val resFormatada = VendaView(venda.id, valorTotalCarrinho, pagamento.name, produtosFormatados)
+
+        // Esvazia tabela do carrinho para a próxima venda
+        this.esvaziaCarrinho()
+        return resFormatada
+    }
+
+    override fun carrinhoList() : List<Carrinho> {
         return this.carrinhoRepository.findAll()
     }
 
+    @Transactional
+    override fun esvaziaCarrinho(){
+        return this.carrinhoRepository.deleteAll()
+    }
+
+    private fun somaValorCarrinho(carrinho : List<Carrinho>) : BigDecimal {
+        return carrinho.sumOf { (it.produto.precoUnitario.times(BigDecimal(it.quantidade))) }
+    }
 }

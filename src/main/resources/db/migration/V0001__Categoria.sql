@@ -1,5 +1,9 @@
 CREATE TABLE `categoria` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome_categoria` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nome_categoria` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `nome_categoria_UNIQUE` (`nome_categoria` ASC) VISIBLE
+) ENGINE = InnoDB;
+
+
