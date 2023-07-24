@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.util.*
@@ -61,18 +63,23 @@ class ProdutoServiceTest{
 
     @Test
     fun deve_editar_produto_com_sucesso(){
-        val produto = cria_produto()
+        val produtoOriginal = cria_produto()
+        val produtoAtualizado = Produto(id=1L, nomeProduto = "Produto de Teste Atualizado",
+                precoUnitario=BigDecimal.valueOf(15),
+                unidade=Unidade(id=2),
+                categoria=Categoria(id=2))
+
         val produtoId = 1L
 
-        Mockito.`when`(this.produtoRepository.findById(produtoId)).thenReturn(Optional.of(Produto()))
-        Mockito.`when`(this.produtoRepository.save(produto)).thenReturn(produto)
+        `when`(this.produtoRepository.findById(produtoId)).thenReturn(Optional.of(produtoOriginal))
+        `when`(this.produtoRepository.save(produtoAtualizado)).thenReturn(produtoAtualizado)
 
-        val response = this.produtoService.updateProduto(produto, produtoId)
+        val response = this.produtoService.updateProduto(produtoAtualizado, produtoId)
 
-        Mockito.verify(produtoRepository, Mockito.times(1)).findById(produtoId)
-        Mockito.verify(produtoRepository, Mockito.times(1)).save(produto)
+        verify(produtoRepository, Mockito.times(1)).findById(produtoId)
+        verify(produtoRepository, Mockito.times(1)).save(produtoAtualizado)
 
-        assertEquals(response, produto)
+        assertEquals(response, produtoAtualizado)
     }
 
 //    @Test

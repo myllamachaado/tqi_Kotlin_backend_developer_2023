@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,51 +27,53 @@ class UnidadeServiceTest{
     @Test
     fun deve_salvar_uma_unidade_com_sucesso(){
         val unidade = cria_unidade()
-        Mockito.`when`(this.unidadeRepository.save(unidade)).thenReturn(unidade)
+        `when`(this.unidadeRepository.save(unidade)).thenReturn(unidade)
         val response = this.unidadeService.saveUnidade(unidade)
-        Mockito.verify(unidadeRepository, Mockito.times(1)).save(unidade)
+        verify(unidadeRepository, Mockito.times(1)).save(unidade)
         assertEquals(unidade, response)
     }
 
     @Test
     fun deve_deletar_uma_unidade_com_sucesso(){
         val unidadeId = 1L
-        Mockito.`when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.of(Unidade()))
+        `when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.of(Unidade()))
         this.unidadeService.deleteUnidade(unidadeId)
-        Mockito.verify(unidadeRepository, Mockito.times(1)).deleteById(unidadeId)
+        verify(unidadeRepository, Mockito.times(1)).deleteById(unidadeId)
     }
 
     @Test
     fun deve_listar_unidades_com_sucesso(){
         val unidades : List<Unidade> = ArrayList()
-        Mockito.`when`(this.unidadeRepository.findAll()).thenReturn(unidades)
+        `when`(this.unidadeRepository.findAll()).thenReturn(unidades)
         val response = this.unidadeService.findAllUnidades()
-        Mockito.verify(unidadeRepository, Mockito.times(1)).findAll()
+        verify(unidadeRepository, Mockito.times(1)).findAll()
         assertEquals(unidades, response)
     }
 
     @Test
     fun deve_lancar_excecao_unidade_nao_encontrada(){
         val unidadeId = 1L
-        Mockito.`when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.empty())
+        `when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.empty())
         assertThrows(EntidadeNaoEncontradaException::class.java) { this.unidadeService.findUnidade(1L) }
-        Mockito.verify(unidadeRepository, Mockito.times(1)).findById(unidadeId)
+        verify(unidadeRepository, Mockito.times(1)).findById(unidadeId)
     }
 
     @Test
     fun deve_editar_unidade_com_sucesso(){
-        val unidade = cria_unidade()
+        val unidadeOriginal = cria_unidade()
+        val unidadeAtualizada = Unidade(id=1L, nomeUnidade = "Unidade de Teste Atualizada")
+
         val unidadeId = 1L
 
-        Mockito.`when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.of(Unidade()))
-        Mockito.`when`(this.unidadeRepository.save(unidade)).thenReturn(unidade)
+        `when`(this.unidadeRepository.findById(unidadeId)).thenReturn(Optional.of(unidadeOriginal))
+        `when`(this.unidadeRepository.save(unidadeAtualizada)).thenReturn(unidadeAtualizada)
 
-        val response = this.unidadeService.updateUnidade(unidade, unidadeId)
+        val response = this.unidadeService.updateUnidade(unidadeAtualizada, unidadeId)
 
-        Mockito.verify(unidadeRepository, Mockito.times(1)).findById(unidadeId)
-        Mockito.verify(unidadeRepository, Mockito.times(1)).save(unidade)
+        verify(unidadeRepository, Mockito.times(1)).findById(unidadeId)
+        verify(unidadeRepository, Mockito.times(1)).save(unidadeAtualizada)
 
-        assertEquals(response, unidade)
+        assertEquals(response, unidadeAtualizada)
     }
 
 //    @Test

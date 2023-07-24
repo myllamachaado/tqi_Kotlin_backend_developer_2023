@@ -58,18 +58,19 @@ class CategoriaServiceTest {
 
     @Test
     fun deve_editar_categoria_com_sucesso(){
-        val categoria = cria_categoria()
+        val categoriaOriginal = cria_categoria()
+        val categoriaAtualizada = Categoria(id=1L, nomeCategoria = "Categoria de Teste Atualizada")
         val categoriaId = 1L
 
-        `when`(this.categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(Categoria()))
-        `when`(this.categoriaRepository.save(categoria)).thenReturn(categoria)
+        `when`(this.categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoriaOriginal))
+        `when`(this.categoriaRepository.save(categoriaAtualizada)).thenReturn(categoriaAtualizada)
 
-        val response = this.categoriaService.updateCategoria(categoria, categoriaId)
+        val response = this.categoriaService.updateCategoria(categoriaAtualizada, categoriaId)
 
         verify(categoriaRepository, times(1)).findById(categoriaId)
-        verify(categoriaRepository, times(1)).save(categoria)
+        verify(categoriaRepository, times(1)).save(categoriaAtualizada)
 
-        assertEquals(response, categoria)
+        assertEquals(response, categoriaAtualizada)
     }
 
 //    @Test

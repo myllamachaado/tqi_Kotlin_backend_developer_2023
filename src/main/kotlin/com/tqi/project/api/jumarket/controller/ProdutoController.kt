@@ -35,7 +35,7 @@ class ProdutoController(private val produtoService: ProdutoService) {
         return ResponseEntity.status(HttpStatus.OK).body(ProdutoView(produto, produto.unidade, produto.categoria))
     }
 
-    @PostMapping("/{produtoId}")
+    @PutMapping("/{produtoId}")
     fun updateProduto(@RequestBody @Valid produtoDTO: ProdutoDTO,
                       @PathVariable produtoId: Long): ResponseEntity<ProdutoView> {
         val produto: Produto = this.produtoService.updateProduto(produtoDTO.toEntity(), produtoId)
