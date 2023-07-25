@@ -41,11 +41,21 @@ class ApiExeptionHandler {
     fun handleSQLIntegrityConstraintViolationException(ex : SQLIntegrityConstraintViolationException)
                                                         : ResponseEntity<ErrorResponse>{
         val status = HttpStatus.BAD_REQUEST
-        val erro = ErrorResponse(status.value(), OffsetDateTime.now(),
-                "Não é possível inserir itens duplicados.")
+        var message = ""
+
+        if(ex.message?.contains("Duplicate entry") == true){
+            message = "Não é possível adicionar o mesmo item mais de uma vez"
+        }
+        else if (ex.message?.contains("Cannot delete or update a parent row: a foreign key constraint fails") == true) {
+            message = "Não é possível deletar o item pois ele possui relacionamentos."
+        }
+        else {
+            message = "Verifique se o item não está duplicado ou tem relacionamentos vigentes."
+        }
+
+        val erro = ErrorResponse(status.value(), OffsetDateTime.now(), message)
         return ResponseEntity(erro, HttpStatus.BAD_REQUEST)
     }
-
 
 
 }
