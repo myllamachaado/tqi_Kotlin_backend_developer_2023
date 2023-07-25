@@ -51,6 +51,19 @@ Uma mercearia do Bairro Bom Descanso chamado JuMarket necessita de uma solução
   <img src="https://github.com/myllamachaado/tqi_Kotlin_backend_developer_2023/blob/master/files/bd.PNG"/><br>
 </p>
 </figure>
+
+**- Tabela categoria:** Guarda todas as categorias cadastradas.
+
+**- Tabela unidade:** Guarda todas as unidades de medida cadastradas.
+
+**- Tabela produto:** Guarda todos os produtos cadastrados.
+
+**- Tabela carrinho:** É uma lista de produtos.
+
+**- Tabela venda:** Guarda o valor total da venda e a forma de pagamento.
+
+**- Tabela venda_carrinho:** Ao finalizar a venda, esta tabela guarda o relacionamento de quais itens foram comprados em cada comprae quais eram seus valores unitários no ato da venda. Exemplo: A compra de id=1 possui os produtos 2, 6, 7, 8 e 9.
+
     
 ## - Executando o projeto localmente
 
