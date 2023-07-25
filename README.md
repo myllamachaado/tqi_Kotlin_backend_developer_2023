@@ -16,9 +16,6 @@
     <a alt="JPA">
         <img src="https://img.shields.io/badge/JPA-v3.1.0-brightgreen.svg" />
     </a>
-     <a alt="Validation">
-        <img src="https://img.shields.io/badge/Validation-v2.0.2-red.svg" />
-    </a>
      <a alt="Flyway">
         <img src="https://img.shields.io/badge/Flyway-v7.15.0-blueviolet.svg" />
     </a>
